@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">  
+    <title>screen4</title>
+    <!-- Στην σελίδα screen4.html γίνεται η καταχώρηση των στοιχείων μιας νέας επαφής με βάση τα στοιχεία που καταχωρεί ο χρήστης και την
+    φωτογραφία που πιθανόν να επιλέξει να ενσωματώσει στην επαφή. Η λήψη της φωτογραφίας ενεργοποιείται με την συνάρτηση
+    capturePhoto και σε περίπτωση επιτυχούς λήψης αποθηκεύεται στην localStorage μεταβλητη Epafi_photo. Στην περίπτωση
+    επικαιροποίησης της επαφής (όταν δηλ. Epafi_enimerosi_true==1) εμφανίζονται στα πλαίσια κειμένου "Επώνυμο", "Όνομα"
+    "Τηλέφωνο" τα αρχικά στοιχεία της επαφής έτσι ώστε εάν το επιθυμεί ο χρήστης να τα τροποποιήσει.  -->
+    
+    <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+    <script type="text/javascript" charset="utf-8">
+
+ 			var pictureSource;   // picture source
+    		var destinationType; // sets the format of returned value
+
+            document.addEventListener("deviceready", onDeviceReady, false);
+
+            function onDeviceReady() {
+            	
+                if(!navigator.onLine){alert("Δεν υπάρχει ενεργή σύνδεση δικτύου. Παρακαλώ συνδεθείτε...");}
+                
+                document.getElementById("epitheto").value=window.localStorage.getItem("Epafi_epitheto");
+               
+                document.getElementById("saveButton").addEventListener("click", saveFunction);
+                  
+                var epafi_enimerosi_true=window.localStorage.getItem("Epafi_enimerosi_true");
+                if (window.localStorage.getItem("Epafi_enimerosi_true")==1){
+                	var epafi_enimerosi_onoma=window.localStorage.getItem("Epafi_enimerosi_onoma");
+                	var epafi_enimerosi_epitheto=window.localStorage.getItem("Epafi_enimerosi_epitheto");
+                	var epafi_enimerosi_tilefono=window.localStorage.getItem("Epafi_enimerosi_tilefono");
+                	
+                	document.getElementById("epitheto").value=epafi_enimerosi_epitheto;
+                	document.getElementById("onoma").value=epafi_enimerosi_onoma;
+                	document.getElementById("tilefono").value=epafi_enimerosi_tilefono;
+                    
+                }
+                
+                pictureSource=navigator.camera.PictureSourceType;
+        		destinationType=navigator.camera.DestinationType;
+                
+            }
+
+            function saveFunction(e){
+               
+               window.localStorage.setItem("Epafi_epitheto", document.getElementById("epitheto").value);
+               window.localStorage.setItem("Epafi_onoma", document.getElementById("onoma").value);
+               window.localStorage.setItem("Epafi_tilefono", document.getElementById("tilefono").value);
+              
+               window.location="screen5.html";
+            
+            }
+  
+    function onPhotoDataSuccess(imageData) {
+
+      window.localStorage.setItem("Epafi_photo", imageData);
+
+    }
+    
+   function onFail(message) {
+      alert('Failed because: ' + message);
+    }
+ 
+   function capturePhoto() {
+      navigator.camera.getPicture(onPhotoDataSuccess, onFail, { quality: 50});
+
+    }
+
+    </script>
+    <link rel="stylesheet" type="text/css" href="styles.css" />  
+    <h1>MyContacts</h1>
+  </head>
+  <body class="slidein" bgcolor="#D1D4F3" >
+    	<div style="text-align:center">
+    		<h2>Καταχώρηση Στοιχείων Επαφής</h2>
+    		<br />
+    		<input type="text" id="epitheto" placeholder="Επώνυμο" />
+    		<br/><br/>
+    		<input type="text" id="onoma" placeholder="Όνομα" />
+    		<br/><br/>
+    		 <input type="tel" id="tilefono" placeholder="Τηλέφωνο" />
+    		<br/><br/>
+    		<button style="width:120 px; height:50px" onclick="capturePhoto();">Φωτογραφία</button>
+    		<br/><br/>
+    		<input type="button" id="saveButton" value="Καταχώρηση"/>
+		</div>
+  </body>
+</html>

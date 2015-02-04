@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="format-detection" content="telephone=no" />
+<script type="text/javascript" src="cordova.js"></script>
+<link rel="stylesheet" type="text/css" href="styles.css" />
+
+    <!-- Στην σελίδα screen6.html ο χρήστης έχει την δυνατότητα σάρωσης κώδικα QR πατώντας το κουμπί Έναρξη Σάρωσης, 
+    οπότε και ενεργοποιείται η συνάρτηση startScan, η οποία επιστρέφει σε μορφή κειμένου το αποτέλεσμα της σάρωσης. Στην
+    συνέχεια ο χρήστης μπορεί να πατήσει το κουμπί Έξοδος οπότε και με την χρήση της συνάρτησης exitFunction εμφανίζεται
+    για 5 δευτερόλεπτα το μήνυμα αποχαιρετισμού και στην συνέχεια τερματίζεται η εφαρμογή  -->
+<script type="text/javascript">
+	
+	document.addEventListener("deviceready", onDeviceReady, false);
+	var resultDiv;
+	
+	function onDeviceReady() {
+		if(!navigator.onLine){alert("Δεν υπάρχει ενεργή σύνδεση δικτύου. Παρακαλώ συνδεθείτε...");}
+	
+		document.getElementById("exitButton").addEventListener("click", exitFunction);
+		document.querySelector("#startScan").addEventListener("touchend", startScan, false);
+		resultDiv = document.querySelector("#results");
+	}
+	function startScan() {
+		cordova.plugins.barcodeScanner.scan(
+			function (result) {
+				var s = "Αποτέλεσμα Σάρωσης : <br/>" + result.text + "<br/><br/>" +
+				"Μορφή: " + result.format + "<br/>";
+				resultDiv.innerHTML = s;
+			},
+			function (error) {alert("Η σάρωση απέτυχε : " + error);}
+	);
+	}
+	
+	function exitFunction(){
+		var message="Σας ευχαριστώ που δοκιμάσατε την εφαρμογή μου";
+		resultDiv.innerHTML=message;
+		setTimeout(function(){navigator.app.exitApp();}, 5000);
+		
+	}
+
+</script>
+<h1>MyContacts</h1>
+</head>
+<body class="slidein" bgcolor="#D1D4F3">
+	<div style="text-align:center">
+		<h2>Σάρωση κώδικα QR</h2>
+		<button id="startScan" style="width:120 px; height:50px">Έναρξη Σάρωσης</button>
+		<input type="button" id="exitButton" value="Έξοδος"/> <br/><br>
+	</div>	
+	<div class="body" id="results"></div>
+</body>
+</html>

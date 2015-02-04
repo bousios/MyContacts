@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>screen2</title>
+    
+    <!-- Στην σελίδα screen2.html γίνεται έλεγχος για το εάν υπάρχει ενεργή σύνδεση δικτύου και τι τυπου είναι.
+     Εάν δεν υπάρχει ενεργή σύνδεση δικτύου ενημερώνεται ο χρήστης ότι πρέπει να συνδεθεί για να προχωρήσει στην
+     επόμενη σελίδα. Με την χρήση της συνάρητησης setInterval ελέγχεται ανά 2 δευτερόλεπτα η κατάσταση της σύνδεσης
+     και όταν αυτή ενεργοποιηθεί, ενημερώνεται ο χρήστης, με σχετικό μήνυμα για το είδος της ενεργής σύνδεσης. 
+     Μετά από 5 δευτερόλεπτα γίνεται μετάβαση στην επόμενη σελίδα screen3.html. -->
+    
+	<meta name="format-detection" content="telephone=no" />
+
+    <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+    <script type="text/javascript" charset="utf-8">
+  
+
+ 
+    document.addEventListener("deviceready", onDeviceReady, false);
+    var resultDiv;
+    
+    function onDeviceReady() {
+        if(!navigator.onLine){alert("Δεν υπάρχει ενεργή σύνδεση δικτύου. Παρακαλώ συνδεθείτε...");}
+        checkConnection();
+        resultDiv = document.querySelector("#results");
+    }
+
+    function checkConnection() {
+        
+        setInterval(function(){
+            
+            var networkState = navigator.connection.type;
+		    var states = {};
+            states[Connection.UNKNOWN]  = 'Unknown connection';
+            states[Connection.ETHERNET] = 'Ethernet connection';
+            states[Connection.WIFI]     = 'WiFi connection';
+            states[Connection.CELL_2G]  = 'Cell 2G connection';
+            states[Connection.CELL_3G]  = 'Cell 3G connection';
+            states[Connection.CELL_4G]  = 'Cell 4G connection';
+            states[Connection.CELL]     = 'Cell generic connection';
+            states[Connection.NONE]     = 'No network connection';
+
+            if (!(networkState==Connection.NONE)){
+            	var s="Ενεργή σύνδεση δικτύου: " + states[networkState] + "<br/> Παρακαλώ περιμένετε ....";
+            	resultDiv.innerHTML = s;
+                setTimeout(function(){window.location = "screen3.html";}, 5000);
+            }
+            
+        }, 2000);
+     }   
+
+    </script>
+    <link rel="stylesheet" type="text/css" href="styles.css" />  
+    <h1>MyContacts</h1>
+  </head>
+  <body class="slidein" bgcolor="#D1D4F3" >
+	<div id="results" class="body">Έλεγχος για ενεργή σύνδεση δικτύου. Παρακαλώ περιμένετε....</div>
+   </body>
+</html>
